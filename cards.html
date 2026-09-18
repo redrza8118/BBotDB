@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BasketBot Card Database</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>BasketBot Card Database</h1>
+        <p>Search and explore BasketBot cards.</p>
+    </header>
+
+    <main>
+
+        <input
+            type="text"
+            id="card-search"
+            placeholder="Search cards..."
+        >
+
+        <div id="card-list"></div>
+
+    </main>
+
+    <footer>
+        <p>BasketBot Database — Community Project</p>
+    </footer>
+
+    <script src="./cards.js"></script>
+
+    <script>
+
+        const cardList = document.getElementById("card-list");
+        const searchInput = document.getElementById("card-search");
+
+        function displayCards() {
+
+            cardList.innerHTML = "";
+
+            const searchTerm = searchInput.value.toLowerCase();
+
+            const filteredCards = cards.filter(card => {
+
+                return (
+                    card.name.toLowerCase().includes(searchTerm) ||
+                    card.rarity.toLowerCase().includes(searchTerm) ||
+                    card.position.some(position =>
+                        position.toLowerCase().includes(searchTerm)
+                    )
+                );
+
+            });
+
+            filteredCards.forEach(card => {
+
+                const cardElement = document.createElement("div");
+
+                cardElement.className = "trait-card";
+
+                const positionText = card.position.join(" / ");
+
+                const romanNumerals = ["", "I", "II", "III"];
+
+                const traitText = card.traits.map(trait => {
+
+                    if (trait.level === null) {
+                        return trait.name;
+                    }
+
+                    return `${trait.name} ${romanNumerals[trait.level]}`;
+
+                }).join(" · ");
+
+                cardElement.innerHTML = `
+
+                    <div class="card-image-container">
+
+                        <img
+                            src="${card.image}"
+                            alt="${card.name} card art"
+                            class="card-image"
+                        >
+
+                    </div>
+
+                    <div class="card-information">
+
+                        <h2>${card.name}</h2>
+
+                        <p><strong>Rarity:</strong> ${card.rarity}</p>
+
+                        <p><strong>Shooting:</strong> ${card.shooting}</p>
+                        <p><strong>Finishing:</strong> ${card.finishing}</p>
+                        <p><strong>Defending:</strong> ${card.defending}</p>
+                        <p><strong>Playmaking:</strong> ${card.playmaking}</p>
+
+                        <p><strong>Height:</strong> ${card.height}</p>
+                        <p><strong>Position:</strong> ${positionText}</p>
+
+                        <p><strong>Market Estimate:</strong> ${card.marketEstimate}</p>
+
+                        <p><strong>Traits:</strong> ${traitText}</p>
+
+                    </div>
+
+                `;
+
+                cardList.appendChild(cardElement);
+
+            });
+
+        }
+
+        searchInput.addEventListener("input", displayCards);
+
+        displayCards();
+
+    </script>
+
+</body>
+
+</html>

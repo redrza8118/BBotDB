@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BasketBot Traits</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>BasketBot Card Traits</h1>
+        <p>Search through all available card traits.</p>
+    </header>
+
+    <main>
+
+        <input
+            type="text"
+            id="trait-search"
+            placeholder="Search traits..."
+        >
+
+        <select id="level-filter">
+            <option value="all">All Levels</option>
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+        </select>
+
+        <div id="trait-list"></div>
+
+    </main>
+
+    <footer>
+        <p>BasketBot Database — Community Project</p>
+    </footer>
+
+    <script src="traits.js"></script>
+
+    <script>
+        const traitList = document.getElementById("trait-list");
+        const searchInput = document.getElementById("trait-search");
+        const levelFilter = document.getElementById("level-filter");
+
+        function displayTraits() {
+
+            traitList.innerHTML = "";
+
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedLevel = levelFilter.value;
+
+            const filteredTraits = traits.filter(trait => {
+
+                const matchesSearch =
+                    trait.name.toLowerCase().includes(searchTerm) ||
+                    trait.description.toLowerCase().includes(searchTerm);
+
+                const matchesLevel =
+                    selectedLevel === "all" ||
+                    trait.levels.includes(Number(selectedLevel));
+
+                return matchesSearch && matchesLevel;
+            });
+
+            filteredTraits.forEach(trait => {
+
+                const traitElement = document.createElement("div");
+
+                traitElement.className = "trait-card";
+
+                const levelText = trait.levels.join(", ");
+
+                traitElement.innerHTML = `
+                    <h2>${trait.name}</h2>
+                    <p>${trait.description}</p>
+                    <p class="trait-level">Available Levels: ${levelText}</p>
+                    <hr>
+                `;
+
+                traitList.appendChild(traitElement);
+            });
+        }
+
+        searchInput.addEventListener("input", displayTraits);
+
+        levelFilter.addEventListener("change", displayTraits);
+
+        displayTraits();
+    </script>
+
+</body>
+
+</html>
